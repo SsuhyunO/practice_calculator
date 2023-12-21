@@ -16,13 +16,16 @@ class Main(QDialog):
 
         ### 수식 입력과 답 출력을 위한 LineEdit 위젯 생성
         label_equation = QLabel("Equation: ")
-        label_solution = QLabel("Solution: ")
         self.equation = QLineEdit("")
-        self.solution = QLineEdit("")
-
+        
         ### layout_equation_solution 레이아웃에 수식, 답 위젯을 추가
         layout_equation_solution.addRow(label_equation, self.equation)
-        layout_equation_solution.addRow(label_solution, self.solution)
+
+        ### 계산결과를 나타내기 위해 QLineEdit를 추가, 입출력은 한곳에서만 해야하므로 hide()함수를 통해 숨김 
+        self.result = QLineEdit("")
+        self.result.setReadOnly(True) 
+        self.result.hide()
+        layout_equation_solution.addRow(self.result)
 
          # QGridLayout으로 변경
         layout_operation = QGridLayout()
@@ -37,7 +40,7 @@ class Main(QDialog):
         ### 사칙연산 버튼을 클릭했을 때, 각 사칙연산 부호가 수식창에 추가될 수 있도록 시그널 설정
         button_plus.clicked.connect(lambda state, operation = "+": self.button_operation_clicked(operation))
         button_minus.clicked.connect(lambda state, operation = "-": self.button_operation_clicked(operation))
-        button_product.clicked.connect(lambda state, operation = "*": self.button_operation_clicked(operation))
+        button_product.clicked.connect(lambda state, operation = "*": self.button_operation_clicked(operation))        
         button_division.clicked.connect(lambda state, operation = "/": self.button_operation_clicked(operation))
 
         ### =, clear, backspace 버튼 생성
@@ -108,19 +111,24 @@ class Main(QDialog):
         equation += str(num)
         self.equation.setText(equation)
 
+    # 윈도우 계산기와 같이 입력창 초기화
     def button_operation_clicked(self, operation):
         equation = self.equation.text()
         equation += operation
-        self.equation.setText(equation)
+        self.equation.setText("") 
+        self.result.setText(equation)
 
+    # 숨긴 result창을 통해 결과를 구하고 출력하기
     def button_equal_clicked(self):
         equation = self.equation.text()
-        solution = eval(equation)
-        self.solution.setText(str(solution))
+        result = self.result.text()
+        result += equation
+        result = eval(result)
+        self.result.setText(str(result))
+        self.equation.setText(str(result))
 
     def button_clear_clicked(self):
         self.equation.setText("")
-        self.solution.setText("")
 
     def button_backspace_clicked(self):
         equation = self.equation.text()
