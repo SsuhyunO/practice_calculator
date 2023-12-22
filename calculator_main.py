@@ -15,7 +15,7 @@ class Main(QDialog):
         layout_equation_solution = QFormLayout()
 
         ### 수식 입력과 답 출력을 위한 LineEdit 위젯 생성
-        label_equation = QLabel("Equation: ")
+        label_equation = QLabel("Calculator: ")
         self.equation = QLineEdit("")
         
         ### layout_equation_solution 레이아웃에 수식, 답 위젯을 추가
@@ -46,6 +46,10 @@ class Main(QDialog):
         button_minus.clicked.connect(lambda state, operation = "-": self.button_operation_clicked(operation))
         button_product.clicked.connect(lambda state, operation = "*": self.button_operation_clicked(operation))        
         button_division.clicked.connect(lambda state, operation = "/": self.button_operation_clicked(operation))
+        button_remain.clicked.connect(lambda state, operation="%": self.button_operation_clicked(operation))
+        button_reciprocal.clicked.connect(self.button_reciprocal_clicked)
+        button_square.clicked.connect(self.button_square_clicked)
+        button_root.clicked.connect(self.button_root_clicked)
 
         ### =, clear, backspace 버튼 생성
         button_equal = QPushButton("=")
@@ -96,9 +100,11 @@ class Main(QDialog):
         button_dot.clicked.connect(lambda state, num = ".": self.number_button_clicked(num))
         layout_number.addWidget(button_dot, 3, 2)
 
-        button_double_zero = QPushButton("00")
-        button_double_zero.clicked.connect(lambda state, num = "00": self.number_button_clicked(num))
-        layout_number.addWidget(button_double_zero, 3, 0)
+        button_PlusMinus = QPushButton("+/-")
+        layout_number.addWidget(button_PlusMinus, 3, 0)
+        # button_double_zero = QPushButton("00")
+        # button_double_zero.clicked.connect(lambda state, num = "00": self.number_button_clicked(num))
+        # layout_number.addWidget(button_double_zero, 3, 0)
 
         # 연산 기호를 숫자 옆에 배치
         layout_number.addWidget(button_product, 0, 3)
@@ -128,6 +134,24 @@ class Main(QDialog):
         equation += operation
         self.equation.setText("") 
         self.result.setText(equation)
+
+    def button_reciprocal_clicked(self):
+        operand = float(self.equation.text())
+        result = 1 / operand
+        self.result.setText(str(result))
+        self.equation.setText(str(result))
+
+    def button_square_clicked(self):
+        operand = float(self.equation.text())
+        result = operand ** 2
+        self.result.setText(str(result))
+        self.equation.setText(str(result))
+
+    def button_root_clicked(self):
+        operand = float(self.equation.text())
+        result = operand ** 0.5
+        self.result.setText(str(result))
+        self.equation.setText(str(result))
 
     # 숨긴 result창을 통해 결과를 구하고 출력하기
     def button_equal_clicked(self):
