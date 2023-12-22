@@ -46,6 +46,10 @@ class Main(QDialog):
         button_minus.clicked.connect(lambda state, operation = "-": self.button_operation_clicked(operation))
         button_product.clicked.connect(lambda state, operation = "*": self.button_operation_clicked(operation))        
         button_division.clicked.connect(lambda state, operation = "/": self.button_operation_clicked(operation))
+        button_remain.clicked.connect(lambda state, operation="%": self.button_operation_clicked(operation))
+        button_reciprocal.clicked.connect(self.button_reciprocal_clicked)
+        button_square.clicked.connect(self.button_square_clicked)
+        button_root.clicked.connect(self.button_root_clicked)
 
         ### =, clear, backspace 버튼 생성
         button_equal = QPushButton("=")
@@ -128,6 +132,24 @@ class Main(QDialog):
         equation += operation
         self.equation.setText("") 
         self.result.setText(equation)
+
+    def button_reciprocal_clicked(self):
+        operand = float(self.equation.text())
+        result = 1 / operand
+        self.result.setText(str(result))
+        self.equation.setText(str(result))
+
+    def button_square_clicked(self):
+        operand = float(self.equation.text())
+        result = operand ** 2
+        self.result.setText(str(result))
+        self.equation.setText(str(result))
+
+    def button_root_clicked(self):
+        operand = float(self.equation.text())
+        result = operand ** 0.5
+        self.result.setText(str(result))
+        self.equation.setText(str(result))
 
     # 숨긴 result창을 통해 결과를 구하고 출력하기
     def button_equal_clicked(self):
